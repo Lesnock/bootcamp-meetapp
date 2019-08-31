@@ -1,5 +1,5 @@
 import express from 'express'
-import { Public } from './routes'
+import { Public, Private } from './routes'
 
 import './database'
 
@@ -17,6 +17,7 @@ class App {
 
     routes () {
         this.server.use(Public)
+        this.server.use(Private)
     }
 }
 

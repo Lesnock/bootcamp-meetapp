@@ -3,9 +3,11 @@ import databaseConfig from '../config/database'
 
 // Models
 import User from '../app/models/User'
+import File from '../app/models/File'
 
 const models = [
     User,
+    File,
 ]
 
 class Database {

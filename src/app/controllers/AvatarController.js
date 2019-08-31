@@ -7,6 +7,7 @@ import { AvatarSchema } from '../validations/AvatarValidation'
 
 class AvatarController {
     async store (req, res) {
+        // Check mimetype
         if (!await AvatarSchema.isValid()) {
             await fs.unlink(req.file.path, err => {
                 if (err) console.log(err)
@@ -15,23 +16,29 @@ class AvatarController {
             return res.json({ error: message('invalid-mime') })
         }
 
+        // Path to avatars folder + filename
+        const avatarPath = `
+            ${resolve(__dirname, '..', '..', '..', 'images', 'avatars')}
+            /
+            ${req.file.filename}`
+
         // Shrink file and send to images/avatar folder
         await sharp(req.file.path)
             .jpeg({ quality: 50 })
             .resize(800)
-            .toFile(resolve(__dirname, '..', '..', '..', 'images', 'avatars') + req.file.filename)
+            .toFile(avatarPath)
 
         // Delete tmp file
         fs.unlink(req.file.path, err => {
             if (err) console.log(err)
         })
 
-        const file = await File.create({
+        const { id, filename, path } = await File.create({
             filename: req.file.filename,
-            path: req.file.path,
+            path: avatarPath,
         })
 
-        return res.json(file)
+        return res.json({ id, filename, path })
     }
 }
 

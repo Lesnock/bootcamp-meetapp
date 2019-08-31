@@ -7,7 +7,7 @@ const destination = (req, file, cb) => cb(null, resolve(__dirname, '..', '..', '
 
 // Name of the file
 const filename = (req, file, cb) => {
-    crypto.randomBytes(16, (err, res) => {
+    crypto.randomBytes(12, (err, res) => {
         if (err) return cb(err)
 
         return cb(null, res.toString('hex') + file.originalname)

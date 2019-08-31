@@ -1,10 +1,22 @@
 import User from '../models/User'
+import File from '../models/File'
 import message from '../messages'
 import { UserCreateSchema } from '../validations/UserValidation'
 
 class UserController {
     async index (req, res) {
-        return res.json()
+        const users = await User.findAll({
+            attributes: ['id', 'name', 'username', 'email'],
+            include: [
+                {
+                    model: File,
+                    as: 'avatar',
+                    attributes: ['id', 'filename', 'path'],
+                },
+            ],
+        })
+
+        return res.json(users)
     }
 
     async store (req, res) {

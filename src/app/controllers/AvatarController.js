@@ -17,10 +17,7 @@ class AvatarController {
         }
 
         // Path to avatars folder + filename
-        const avatarPath = `
-            ${resolve(__dirname, '..', '..', '..', 'images', 'avatars')}
-            /
-            ${req.file.filename}`
+        const avatarPath = `${resolve(__dirname, '..', '..', '..', 'images', 'avatars')}/${req.file.filename}`
 
         // Shrink file and send to images/avatar folder
         await sharp(req.file.path)

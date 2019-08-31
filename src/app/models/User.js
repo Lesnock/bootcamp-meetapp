@@ -10,6 +10,7 @@ class User extends Sequelize.Model {
             email: Sequelize.STRING,
             password: Sequelize.VIRTUAL,
             password_hash: Sequelize.STRING,
+            // avatar_id
             //
         },
         { sequelize })
@@ -19,6 +20,12 @@ class User extends Sequelize.Model {
                 user.password_hash = await bcrypt.hash(user.password, 8)
             }
         })
+
+        return this
+    }
+
+    static associate (models) {
+        this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' })
     }
 
     static async hasEmail (email) {

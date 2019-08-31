@@ -1,4 +1,5 @@
-import { Router } from 'express'
+import { resolve } from 'path'
+import express, { Router } from 'express'
 
 // Middlewares
 import authMiddleware from './app/middlewares/auth'
@@ -13,8 +14,8 @@ export const Public = new Router()
 Public.get('/users', UserController.index)
 Public.post('/users', UserController.store)
 Public.post('/login', LoginController.store)
+Public.use('/avatars', express.static(resolve(__dirname, '..', 'images', 'avatars')))
 
 export const Private = new Router()
 Private.use(authMiddleware)
-
-Private.post('/avatar', uploadSingle('file'), AvatarController.store)
+Private.post('/avatars', uploadSingle('file'), AvatarController.store)

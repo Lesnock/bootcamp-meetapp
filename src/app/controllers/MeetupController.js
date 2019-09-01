@@ -38,6 +38,11 @@ class MeetupController {
             return res.status(400).json({ error: message('validation-fails') })
         }
 
+        // Date past
+        if (isBefore(parseISO(req.body.date), new Date())) {
+            return res.status(400).json({ error: message('invalid-date') })
+        }
+
         const meetup = await Meetup.findOne({
             where: {
                 id: Number(req.params.id),

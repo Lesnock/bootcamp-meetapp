@@ -22,19 +22,19 @@ class UserController {
     async store (req, res) {
         // Yup validation
         if (!await UserCreateSchema.isValid(req.body)) {
-            return res.json({ error: message('validation-fails') })
+            return res.status(400).json({ error: message('validation-fails') })
         }
 
         const { username, email } = req.body
 
         // Check if email is used
         if (await User.hasEmail(email)) {
-            return res.json({ error: message('email-used') })
+            return res.status(400).json({ error: message('email-used') })
         }
 
         // Check if username is used
         if (await User.hasUsername(username)) {
-            return res.json({ error: message('username-used') })
+            return res.status(400).json({ error: message('username-used') })
         }
 
         const { name, password } = await User.create(req.body)

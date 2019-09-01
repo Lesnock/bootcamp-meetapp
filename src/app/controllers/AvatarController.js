@@ -13,7 +13,7 @@ class AvatarController {
                 if (err) console.log(err)
             })
 
-            return res.json({ error: message('invalid-mime') })
+            return res.status(400).json({ error: message('invalid-mime') })
         }
 
         // Path to avatars folder + filename

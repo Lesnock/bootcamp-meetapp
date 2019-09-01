@@ -9,6 +9,8 @@ import { uploadSingle } from './app/middlewares/upload'
 import UserController from './app/controllers/UserController'
 import LoginController from './app/controllers/LoginController'
 import AvatarController from './app/controllers/AvatarController'
+import MeetupController from './app/controllers/MeetupController'
+import OrganizingController from './app/controllers/OrganizingController'
 
 export const Public = new Router()
 Public.get('/users', UserController.index)
@@ -19,3 +21,10 @@ Public.use('/avatars', express.static(resolve(__dirname, '..', 'images', 'avatar
 export const Private = new Router()
 Private.use(authMiddleware)
 Private.post('/avatars', uploadSingle('file'), AvatarController.store)
+
+Private.get('/meetups', MeetupController.index)
+Private.post('/meetups', MeetupController.store)
+Private.put('/meetups/:id', MeetupController.update)
+Private.delete('/meetups/:id', MeetupController.delete)
+
+Private.get('/organizing', OrganizingController.index)

@@ -23,6 +23,11 @@ module.exports = {
             type: Sequelize.DATE,
             allowNull: false,
         },
+        file_id: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            references: { model: 'files', key: 'id' },
+        },
         user_id: {
             type: Sequelize.INTEGER,
             allowNull: false,

@@ -6,6 +6,12 @@ class File extends Sequelize.Model {
             // Attributes
             filename: Sequelize.STRING,
             path: Sequelize.STRING,
+            url: {
+                type: Sequelize.VIRTUAL,
+                get () {
+                    return `${process.env.APP_URL}/avatars/${this.filename}`
+                },
+            },
             //
         },
         { sequelize })

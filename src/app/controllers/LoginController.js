@@ -7,7 +7,7 @@ import { LoginSchema } from '../validations/LoginValidation'
 class LoginController {
     async store (req, res) {
         if (!await LoginSchema.isValid(req.body)) {
-            return res.json({ error: message('wrong-credentials') })
+            return res.status(400).json({ error: message('wrong-credentials') })
         }
 
         const { username, password } = req.body
@@ -15,12 +15,12 @@ class LoginController {
         const user = await User.findOne({ where: { username } })
 
         if (!user) {
-            return res.json({ error: message('wrong-credentials') })
+            return res.status(400).json({ error: message('wrong-credentials') })
         }
 
         // Check password
         if (!await user.checkPassword(password)) {
-            return res.json({ error: message('wrong-credentials') })
+            return res.status(400).json({ error: message('wrong-credentials') })
         }
 
         const token = jwt.sign(

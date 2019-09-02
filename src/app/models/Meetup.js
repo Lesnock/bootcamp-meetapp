@@ -1,7 +1,7 @@
 import User from './User'
 import File from './File'
 import Sequelize, { Op } from 'sequelize'
-import { parseISO, startOfDay, endOfDay } from 'date-fns'
+import { parseISO, startOfDay, endOfDay, isBefore } from 'date-fns'
 
 class Meetup extends Sequelize.Model {
     static init (sequelize) {
@@ -12,6 +12,12 @@ class Meetup extends Sequelize.Model {
             address: Sequelize.STRING,
             date: Sequelize.DATE,
             file_id: Sequelize.INTEGER,
+            isPast: {
+                type: Sequelize.VIRTUAL,
+                get () {
+                    return isBefore(this.date, new Date())
+                },
+            },
             // user
         },
         { sequelize })
@@ -35,11 +41,13 @@ class Meetup extends Sequelize.Model {
             where.date = { [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)] }
         }
 
+        const registerPerPage = 10
+
         return Meetup.findAll({
             where,
             attributes: ['id', 'title', 'description', 'address', 'date'],
-            limit: 10,
-            offset: (page - 1) * 10,
+            limit: registerPerPage,
+            offset: (page - 1) * registerPerPage,
             include: [
                 {
                     model: User,

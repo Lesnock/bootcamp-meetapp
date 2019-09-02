@@ -43,15 +43,20 @@ class MeetupController {
             return res.status(400).json({ error: message('invalid-date') })
         }
 
-        const meetup = await Meetup.findOne({
-            where: {
-                id: Number(req.params.id),
-                user_id: req.userId,
-            },
-        })
+        // Get meetup
+        const meetup = await Meetup.findOne({ where: { id: req.params.id } })
 
         if (!meetup) {
             return res.status(400).json({ error: message('meetup-not-found') })
+        }
+
+        // The user is not the organizer of this meetup
+        if (meetup.user_id !== req.userId) {
+            return res.status(401).json({ error: message('not-authorized') })
+        }
+
+        if (meetup.isPast) {
+            return res.status(403).json({ error: message('meetup-past') })
         }
 
         await meetup.update(req.body)
@@ -60,19 +65,18 @@ class MeetupController {
     }
 
     async delete (req, res) {
-        const meetup = await Meetup.findOne({
-            where: {
-                id: Number(req.params.id),
-                user_id: req.userId,
-            },
-        })
+        const meetup = await Meetup.findOne({ where: { id: req.params.id } })
 
         if (!meetup) {
             return res.status(400).json({ error: message('meetup-not-found') })
         }
 
-        if (isBefore(meetup.date, new Date())) {
-            return res.status(400).json({ error: message('meetup-past') })
+        if (meetup.user_id !== req.userId) {
+            return res.status(401).json({ error: message('not-authorized') })
+        }
+
+        if (meetup.isPast) {
+            return res.status(403).json({ error: message('meetup-past') })
         }
 
         await meetup.destroy()

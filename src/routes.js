@@ -11,6 +11,7 @@ import LoginController from './app/controllers/LoginController'
 import AvatarController from './app/controllers/AvatarController'
 import MeetupController from './app/controllers/MeetupController'
 import OrganizingController from './app/controllers/OrganizingController'
+import SubscriptionController from './app/controllers/SubscriptionController'
 
 export const Public = new Router()
 Public.get('/users', UserController.index)
@@ -28,3 +29,6 @@ Private.put('/meetups/:id', MeetupController.update)
 Private.delete('/meetups/:id', MeetupController.delete)
 
 Private.get('/organizing', OrganizingController.index)
+
+Private.get('/subscriptions', SubscriptionController.index)
+Private.post('/subscribe/:meetupId', SubscriptionController.store)
